@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile</title>
+</head>
+<body>
+    <%- include ('navbar') %>
+    <h1>files</h1>
+    <a href="/upload"><button>upload file</button></a>
+    <form method="post" action="/profile/newfolder">
+        <label for="newFolderName">Folder Name</label>
+        <input name="newFolderName" type="text" placeholder="New Folder">
+        <button type="submit">New Folder</button>
+    </form>
+    <h1> Hello <%= locals.user %></h1>
+    <div style="border: solid blue;">
+        <% locals.folders.map((folder) => { %>
+        <div style="border: solid purple">
+            <form method="get" action="/profile/folder">
+                <input hidden name="folderId" type="text" value=<%= folder.id %>>
+                <button type="submit"> Open folder </button>
+            </form>
+            <form method="post" action="/profile/deletefolder">
+                <input hidden name="folderId" type="text" value=<%= folder.id %>>
+                <button type="submit"> Delete folder </button>
+            </form>
+            <h1><%= folder.title %></h1>
+            <h1><%= folder.creationDate %></h1>
+        </div>
+        <% }) %>
+    </div>
+    <% if (locals.files.length > 0) {%>
+        <div>
+        <% locals.files.map((file) => { %>
+            <div style="border: solid black;"> 
+                <form method="post" action="/profile">
+                    <input hidden name="fileId" type="text" value=<%= file.id %>>
+                    <button type="submit"> Delete </button>
+                </form>
+                <h1>Id: <%= file.id %></h1>
+                <h1>Title: <%= file.title %></h1>
+                <h1>Upload Date: <%= file.uploadDate %></h1>
+                <h1>uploader ID: <%= file.uploaderId %></h1>
+                <form method="post" action="/profile/folderinsert">
+                <h1>insert into folder:</h1>
+                <input hidden name="fileInsert" value="<%= file.id %>" type="number">
+                <select name="folderInsert" id="folderInsert">
+                    <% locals.folders.map((folder) => { %>
+                        <option value="<%= folder.id %>" name="fileOption" id="fileOption">
+                            <%= folder.title + " " + folder.id%>
+                        </option>
+                    <% }) %>
+                </select>
+                <button type="submit">Submit</button>
+                </form>
+            </div>
+        <% }) %>
+        </div>
+        <% } else { %>
+            <h1>you got no files</h1>
+    <% } %>
+</body>
+</html>
+
