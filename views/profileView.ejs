@@ -15,7 +15,7 @@
         <button type="submit">New Folder</button>
     </form>
     <h1> Hello <%= locals.user %></h1>
-    <div style="border: solid blue;">
+    <div id="folders" style="border: solid blue;">
         <% locals.folders.map((folder) => { %>
         <div style="border: solid purple">
             <form method="get" action="/profile/folder">
@@ -34,7 +34,12 @@
     <% if (locals.files.length > 0) {%>
         <div>
         <% locals.files.map((file) => { %>
+            <% if (!file.folder) { %>
             <div style="border: solid black;"> 
+                <form method="get" action="/download">
+                    <input hidden name="fileId" type="text" value=<%= file.id %>>
+                    <button type="submit"> Download </button>
+                </form>
                 <form method="post" action="/profile">
                     <input hidden name="fileId" type="text" value=<%= file.id %>>
                     <button type="submit"> Delete </button>
@@ -51,13 +56,14 @@
                         <option value="<%= folder.id %>" name="fileOption" id="fileOption">
                             <%= folder.title + " " + folder.id%>
                         </option>
-                    <% }) %>
-                </select>
-                <button type="submit">Submit</button>
+                        <% }) %>
+                    </select>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
-        <% }) %>
+            <% } %>
         </div>
+            <% }) %>
         <% } else { %>
             <h1>you got no files</h1>
     <% } %>

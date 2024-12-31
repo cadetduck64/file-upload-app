@@ -35,6 +35,11 @@ const folderInsert = async (req, res) => {
     return folderInsert
 }
 
+const removeFolderFile = async (req, res) => {
+    const removeFolderFile = await database.removeFolderFile(req)
+    return removeFolderFile
+}
+
 module.exports = {
     profileControllerFunc,
     deleteFile,
@@ -42,4 +47,5 @@ module.exports = {
     getProfileFolders,
     deleteFolder,
     openFolder,
-    folderInsert}
+    folderInsert,
+    removeFolderFile}

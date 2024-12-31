@@ -7,6 +7,27 @@
 </head>
 <body>
     <%- include ('navbar') %>
-    <%= locals.folderContents.fileContent %>
+    <a href="/profile"><button>back to profile</button></a>
+    <% locals.folderContents.folderContent.map((file) => { %>
+        <div style="border: solid black;">
+            <form method="post" action="/profile/removefolderfile">
+                <input hidden name="folderId" type="text" value=<%= locals.folderContents.id %>>
+                <input hidden name="fileId" type="text" value=<%= file.id %>>
+                <button type="submit"> Remove from folder </button>
+            </form>
+            <form method="post" action="/download">
+                <input hidden name="fileId" type="text" value=<%= file.id %>>
+                <button type="submit"> Download </button>
+            </form>
+            <h1>file id: <%= file.id %></h1>
+            <h1>title: <%= file.title %></h1>
+            <h1>upload date: <%= file.uploadDate %></h1>
+            <h1>uploader Id: <%= file.uploaderId %></h1>
+            <form method="post" action="/profile">
+                <input hidden name="fileId" type="text" value=<%= file.id %>>
+                <button type="submit"> Delete </button>
+            </form>
+        </div>
+    <% }) %> 
 </body>
 </html>

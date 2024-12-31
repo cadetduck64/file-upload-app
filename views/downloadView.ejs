@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download</title>
+</head>
+<body>
+    <% // console.log(locals.fileInfo.id )%>
+    <%- include ('navbar') %>
+    <a href="/profile"><button>back to profile</button></a>
+    <h1>download</h1>
+    <div style="border: solid black;">
+        <h1><%= locals.fileInfo.id %></h1>
+        <h1>title: <%= locals.fileInfo.title %></h1>
+        <h1>upload date: <%= locals.fileInfo.uploadDate %></h1>
+        <h1>uploaderId: <%= locals.fileInfo.uploaderId %></h1>
+    <form method="post" action="download">
+        <input hidden name="fileId" type="text" value="<%= locals.fileInfo.id %>">
+        <button type="submit">Download File</button>
+    </form>
+    </div>
+</body>
+</html>

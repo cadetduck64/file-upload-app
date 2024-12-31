@@ -1,4 +1,5 @@
 //boilerplat
+const { disconnect } = require('process')
 const pool = require('./pool')
 
 const {PrismaClient} = require('@prisma/client')
@@ -54,13 +55,19 @@ const uploadFile = async (reqArg) => {
         data: {
             title: reqArg.file.filename,
             uploadDate: new Date(),
-            uploaderId: uploaderId,
-            metadata: reqArg.file
+            metadata: reqArg.file,
+            uploaderRelation: {
+                connect: {
+                    id: uploaderId
+                }
+            }
         }
     })
     return userFiles
 }
 
+
+//ref
 const getUserPosts = async (req, res) => {
     const getUploaderData = await prisma.users.findUnique({
         where: {
@@ -76,9 +83,9 @@ const getUserPosts = async (req, res) => {
         where: {
             uploaderId: uploaderId
         },
-        // include: {
-        //     uploader: true
-        // }
+        include: {
+            folder: true
+        }
     })
     return getPosts
 }
@@ -119,7 +126,7 @@ const newFolder = async (req, res) => {
             title: req.body.newFolderName,
             creationDate: new Date(),
             uploaderId: uploaderData.id,
-            fileContent: []
+            // folderContent: []
         }
     }) 
     console.log(uploaderData)
@@ -143,11 +150,15 @@ const deleteFolder = async (req, res) => {
     return folder
 }
 
+//ref
 const openFolder = async (req, res) => {
     const uploaderData = await getUploaderData(req)
     const folderContents = await prisma.folder.findUnique({
         where: {
             id:  parseInt(req.query.folderId)
+        },
+        include: {
+            folderContent: true
         }
     })
     return folderContents
@@ -161,12 +172,39 @@ const folderInsert = async (req, res) => {
             id: parseInt(req.body.folderInsert)
         },
         data: {
-            fileContent: {
-                push: parseInt(req.body.fileInsert)
+            folderContent: {
+                connect: {
+                id: parseInt(req.body.fileInsert)
+                }
             }
         }
     })
     return folderInsert
+}
+
+const removeFolderFile = async (req, res) => {
+    const uploaderData = await getUploaderData(req)
+    console.log(req)
+    const folderContents = await prisma.folder.update({
+        where: {
+            id:  parseInt(req.body.folderId)
+        },
+        data: {
+        folderContent: {
+            disconnect: [{id: parseInt(req.body.fileId)}]
+            }
+        }
+    })
+    return folderContents
+}
+
+const getFileById = async (req, res) => {
+    const fileQuery = await prisma.file.findUnique({
+        where: {
+            id: parseInt(req)
+        }
+    })
+    return fileQuery
 }
 
 module.exports = {
@@ -180,6 +218,8 @@ module.exports = {
     getUserFolders,
     deleteFolder,
     openFolder,
-    folderInsert
+    folderInsert,
+    removeFolderFile,
+    getFileById
 }
 

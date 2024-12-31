@@ -91,6 +91,7 @@ const loginRoute = require('./routes/loginRoute')
 const logoutRoute = require('./routes/logoutRoute')
 const uploadRoute = require('./routes/uploadRoute')
 const profileRoute = require('./routes/profileRoute')
+const downloadRoute = require('./routes/downloadRoute')
 
 //routes
 app.use('/', indexRoute)
@@ -99,6 +100,7 @@ app.use('/login', loginRoute)
 app.use('/logout', logoutRoute)
 app.use('/upload', uploadRoute)
 app.use('/profile', profileRoute)
+app.use('/download', downloadRoute)
 
 const PORT = 3000;
 app.listen(PORT, () => {console.log(`running on port ${PORT}`)})

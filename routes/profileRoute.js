@@ -7,8 +7,9 @@ const {getProfileFolders} = require('../controllers/profileController.js')
 const {deleteFolder} = require('../controllers/profileController.js')
 const {openFolder} = require('../controllers/profileController.js')
 const {folderInsert} = require('../controllers/profileController.js')
+const {removeFolderFile} = require('../controllers/profileController.js')
 
-profileRoute.get('/', async (req, res) => {
+profileRoute.get('/', async (req, res, err) => {
     if (!req.user)
     {return res.redirect('/login')}
     console.log('profile')
@@ -57,6 +58,15 @@ profileRoute.post('/deletefolder', async (req, res) => {
     console.log('delete folder route')
     const deleteFolderRequest = await deleteFolder(req)
     deleteFolderRequest
+    res.redirect('/profile')
+})
+
+profileRoute.post('/removefolderfile', async (req, res) => {
+    if (!req.user)
+    {return res.redirect('/login')}
+    console.log('removing file from folder')
+    const removeFolderFileRequest = await removeFolderFile(req)
+    removeFolderFileRequest
     res.redirect('/profile')
 })
 
