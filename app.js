@@ -18,6 +18,11 @@ app.use(session({ secret: 'password', resave: false, saveUninitialized: false}))
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
+//prisma session store
+const expressSession = require('express-session');
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const { PrismaClient } = require('@prisma/client');
+
 //view engine
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -84,6 +89,27 @@ passport.use(
     done(null, user)
   });
 
+
+
+app.use(
+  expressSession({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+    },
+    secret: 'a santa at nasa',
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(
+      new PrismaClient(),
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    )
+  })
+);
+  
 //route imports
 const indexRoute = require('./routes/indexRoute')
 const signupRoute = require('./routes/signupRoute')
@@ -104,3 +130,8 @@ app.use('/download', downloadRoute)
 
 const PORT = 3000;
 app.listen(PORT, () => {console.log(`running on port ${PORT}`)})
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send(err);
+});

@@ -6,12 +6,13 @@
     <title>profile</title>
 </head>
 <body>
+    
     <%- include ('navbar') %>
-    <h1>files</h1>
+    <h1 class="asdf">files</h1>
     <a href="/upload"><button>upload file</button></a>
     <form method="post" action="/profile/newfolder">
         <label for="newFolderName">Folder Name</label>
-        <input name="newFolderName" type="text" placeholder="New Folder">
+        <input  id="new-folder-name" name="newFolderName" type="text" placeholder="New Folder">
         <button type="submit">New Folder</button>
     </form>
     <h1> Hello <%= locals.user %></h1>
@@ -40,12 +41,23 @@
                     <input hidden name="fileId" type="text" value=<%= file.id %>>
                     <button type="submit"> Download </button>
                 </form>
-                <form method="post" action="/profile">
+                <form method="post" action="/profile/deletefile">
                     <input hidden name="fileId" type="text" value=<%= file.id %>>
                     <button type="submit"> Delete </button>
                 </form>
-                <h1>Id: <%= file.id %></h1>
-                <h1>Title: <%= file.title %></h1>
+                <% if (file.storageData.thumbnail) {%>
+                <%- file.storageData.thumbnail %>
+                <% } %>
+                <h1 name="fileId">Id: <%= file.id %></h1>
+                <label for="fileTile">File Title</label>
+                <h1 id="fileTitle"><%= file.title %></h1>
+                <button id="request-rename">rename file</button>
+                <form id="rename-form" hidden method="post" action="/profile/renamefile">
+                    <input hidden type="text" name="renameId" value="<%= file.id %>">
+                    <input value="<%= file.title %>" name="newFileTitle" type="text" id="newFileTitle">
+                    <button type="submit">submit rename</button>
+                    <button id="cancel-rename" type="button">cancel rename</button>
+                </form>
                 <h1>Upload Date: <%= file.uploadDate %></h1>
                 <h1>uploader ID: <%= file.uploaderId %></h1>
                 <form method="post" action="/profile/folderinsert">
@@ -70,3 +82,4 @@
 </body>
 </html>
 
+<script async src="profileView.js"></script>

@@ -1,4 +1,5 @@
 const database = require('../database/queries')
+const cloudinary = require('../database/cloudinary')
 
 const profileControllerFunc = async (req, res) => {
     const getUserPosts = await database.getUserPosts(req)
@@ -11,8 +12,13 @@ const getProfileFolders = async (req, res) => {
 }
 
 const deleteFile = async (req, res) => {
+    //DELETES FILE IN CLOUD STORAGE
+    const destroyRequest = await database.getFileById(req.body.fileId)
+    console.log(destroyRequest)
+    const destroyFile = await cloudinary.destroyFile(destroyRequest.storageData.public_id)
+    //DELETE FILE INFORMATION FROM LOCAL DATABASE
     const deleteFile = await database.deleteFile(req)
-    return deleteFile
+    return deleteFile, destroyFile
 }
 
 const deleteFolder = async (req, res) => {
@@ -21,6 +27,8 @@ const deleteFolder = async (req, res) => {
 }
 
 const newFolder = async (req, res) => {
+    if (req.body.newFolderName == '')
+    {req.body.newFolderName = 'New Folder'}
     const newFolder = await database.newFolder(req)
     return newFolder
 }
@@ -40,6 +48,15 @@ const removeFolderFile = async (req, res) => {
     return removeFolderFile
 }
 
+const renameFile = async (req, res) => {
+    const fileInfo  = await database.renameFileQuery(req)
+    return fileInfo
+}
+
+const getFileThumbnail = async (req, res) => {
+    const thumbnail = await cloudinary.getThumbnail(element.storageData.public_id)
+    return thumbnail
+}
 module.exports = {
     profileControllerFunc,
     deleteFile,
@@ -48,4 +65,6 @@ module.exports = {
     deleteFolder,
     openFolder,
     folderInsert,
-    removeFolderFile}
+    removeFolderFile,
+    renameFile,
+    getFileThumbnail}

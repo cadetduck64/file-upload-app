@@ -11,14 +11,12 @@
     <a href="/profile"><button>back to profile</button></a>
     <h1>download</h1>
     <div style="border: solid black;">
-        <h1><%= locals.fileInfo.id %></h1>
+        <%- locals.fileInfo.storageData.thumbnail %>
+        <h1>file Id: <%= locals.fileInfo.id %></h1>
         <h1>title: <%= locals.fileInfo.title %></h1>
         <h1>upload date: <%= locals.fileInfo.uploadDate %></h1>
         <h1>uploaderId: <%= locals.fileInfo.uploaderId %></h1>
-    <form method="post" action="download">
-        <input hidden name="fileId" type="text" value="<%= locals.fileInfo.id %>">
-        <button type="submit">Download File</button>
-    </form>
+        <a href="<%= locals.fileInfo.storageData.download_link %>"><button>Download</button></a>
     </div>
 </body>
 </html>

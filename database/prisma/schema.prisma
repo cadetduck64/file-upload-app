@@ -24,6 +24,7 @@ model file {
   metadata Json?
   uploaderId Int
   fileFolder Int?
+  storageData Json
   folder folder? @relation(fields: [fileFolder], references: [id])
   uploaderRelation users @relation(fields: [uploaderId], references: [id])
 }

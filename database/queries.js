@@ -7,7 +7,6 @@ const prisma  = new PrismaClient()
 
 //queries
 const getUploaderData = async (req, res) => {
-
 const uploaderData = await prisma.users.findUnique({
     where: {
         username: req.user.username,
@@ -43,7 +42,7 @@ const newUser = async (usernameArg, userPasswordArg) => {
     return newUser
 }
 
-const uploadFile = async (reqArg) => {
+const uploadFile = async (reqArg, fileURL) => {
     const getUploaderData = await prisma.users.findUnique({
         where: {
             username: reqArg.user.username,
@@ -56,6 +55,10 @@ const uploadFile = async (reqArg) => {
             title: reqArg.file.filename,
             uploadDate: new Date(),
             metadata: reqArg.file,
+
+            storageData: fileURL,
+
+
             uploaderRelation: {
                 connect: {
                     id: uploaderId
@@ -66,8 +69,6 @@ const uploadFile = async (reqArg) => {
     return userFiles
 }
 
-
-//ref
 const getUserPosts = async (req, res) => {
     const getUploaderData = await prisma.users.findUnique({
         where: {
@@ -129,7 +130,6 @@ const newFolder = async (req, res) => {
             // folderContent: []
         }
     }) 
-    console.log(uploaderData)
     return newFolder
 }
 
@@ -207,7 +207,20 @@ const getFileById = async (req, res) => {
     return fileQuery
 }
 
+const renameFileQuery = async (req, res) => {
+    const renameFile = await prisma.file.update({
+        where: {
+            id: parseInt(req.body.renameId)
+        },
+        data: {
+            title: req.body.newFileTitle
+        }
+    })
+    return renameFile
+}
+
 module.exports = {
+    getUploaderData,
     queryAll,
     loginUser,
     newUser,
@@ -220,6 +233,7 @@ module.exports = {
     openFolder,
     folderInsert,
     removeFolderFile,
-    getFileById
+    getFileById,
+    renameFileQuery
 }
 

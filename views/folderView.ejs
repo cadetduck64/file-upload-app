@@ -15,15 +15,16 @@
                 <input hidden name="fileId" type="text" value=<%= file.id %>>
                 <button type="submit"> Remove from folder </button>
             </form>
-            <form method="post" action="/download">
+            <form method="get" action="/download">
                 <input hidden name="fileId" type="text" value=<%= file.id %>>
                 <button type="submit"> Download </button>
             </form>
+            <%- file.storageData.thumbnail %>
             <h1>file id: <%= file.id %></h1>
             <h1>title: <%= file.title %></h1>
             <h1>upload date: <%= file.uploadDate %></h1>
             <h1>uploader Id: <%= file.uploaderId %></h1>
-            <form method="post" action="/profile">
+            <form method="post" action="/profile/deletefile">
                 <input hidden name="fileId" type="text" value=<%= file.id %>>
                 <button type="submit"> Delete </button>
             </form>
